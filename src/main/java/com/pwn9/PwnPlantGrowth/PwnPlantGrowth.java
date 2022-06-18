@@ -19,8 +19,6 @@ import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.khorn.terraincontrol.TerrainControl;
-
 public class PwnPlantGrowth extends JavaPlugin 
 {
 	// For convenience, a reference to the instance of this plugin
@@ -75,10 +73,7 @@ public class PwnPlantGrowth extends JavaPlugin
 	public static String fertFound;
 	public static String wkFound;
 	public static String uvFound;
-	
-	// Terrain Control Hook
-	public static TerrainControl tc;	
-	
+
 	public void onEnable() 
 	{
 		// Create an instance of this, for some reason, I forget why.
@@ -246,83 +241,22 @@ public class PwnPlantGrowth extends JavaPlugin
 
 	public static String getBiome(BlockGrowEvent e) 
 	{
-		if (tc != null) 
-		{		
-			String tControl = TerrainControl.getBiomeName(e.getBlock().getWorld().getName(), e.getBlock().getLocation().getBlockX(), e.getBlock().getLocation().getBlockZ());
-			if (tControl != null)
-			{
-				return tControl;
-			}
-			else
-			{
-				return String.valueOf(e.getBlock().getBiome());
-			}
-		}
-		else
-		{
-			return String.valueOf(e.getBlock().getBiome());
-		}
+		return String.valueOf(e.getBlock().getBiome());
 	}
 
 	public static String getBiome(StructureGrowEvent e) 
 	{
-		if (tc != null) 
-		{
-			String tControl = TerrainControl.getBiomeName(e.getWorld().getName(), e.getLocation().getBlockX(), e.getLocation().getBlockZ());
-			if (tControl != null)
-			{
-				return tControl;
-			}
-			else 
-			{
-				return String.valueOf(e.getLocation().getBlock().getBiome());
-			}
-		}
-		else
-		{
-			return String.valueOf(e.getLocation().getBlock().getBiome());
-		}
+		return String.valueOf(e.getLocation().getBlock().getBiome());
 	}
 
 	public static String getBiome(BlockFertilizeEvent e) 
 	{
-		if (tc != null) 
-		{		
-			String tControl = TerrainControl.getBiomeName(e.getBlock().getWorld().getName(), e.getBlock().getLocation().getBlockX(), e.getBlock().getLocation().getBlockZ());
-			if (tControl != null)
-			{
-				return tControl;
-			}
-			else
-			{
-				return String.valueOf(e.getBlock().getBiome());
-			}
-		}
-		else
-		{
-			return String.valueOf(e.getBlock().getBiome());
-		}
+		return String.valueOf(e.getBlock().getBiome());
 	}
 	
 	// need to get the biome of the clicked block, not the player, in case the block is in a different biome
 	public static String getBiome(PlayerInteractEvent e) {
-		if (tc != null) 
-		{
-			//String tControl = TerrainControl.getBiomeName(e.getPlayer().getWorld().getName(), e.getPlayer().getLocation().getBlockX(), e.getPlayer().getLocation().getBlockZ());
-			String tControl = TerrainControl.getBiomeName(e.getPlayer().getWorld().getName(), e.getClickedBlock().getLocation().getBlockX(), e.getClickedBlock().getLocation().getBlockZ());
-			if (tControl != null)
-			{
-				return tControl;
-			}
-			else 
-			{
-				return String.valueOf(e.getClickedBlock().getBiome());
-			}
-		}
-		else
-		{
-			return String.valueOf(e.getClickedBlock().getBiome());
-		}
+		return String.valueOf(e.getClickedBlock().getBiome());
 	}
 	
 	public void loadConfig() {

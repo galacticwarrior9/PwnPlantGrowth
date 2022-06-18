@@ -4,7 +4,7 @@ version: 2.6.1
 author: tremor77
 description: Take control over all plant growth
 website: http://pwn9.com
-api-version: 1.13
+api-version: 1.19
 commands:
    ppg:
       description: Execute a PwnPlantGrowth command
