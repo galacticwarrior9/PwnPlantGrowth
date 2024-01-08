@@ -1,12 +1,17 @@
 package com.pwn9.PwnPlantGrowth;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.StructureGrowEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StructureGrowListener implements Listener 
 {
@@ -25,7 +30,7 @@ public class StructureGrowListener implements Listener
 	}
 
 	// retrieve list of special blocks
-	public List<List<String>> specialBlockList(StructureGrowEvent e)
+	public static List<List<String>> specialBlockList(Location location)
 	{
 		List<String> fBlocksFound = new ArrayList<String>();
 		List<String> wkBlocksFound = new ArrayList<String>();
@@ -41,7 +46,7 @@ public class StructureGrowListener implements Listener
 	            {
 	               for (int z = -(PwnPlantGrowth.fradius); z <= PwnPlantGrowth.fradius; z++) 
 	               {
-	            	   fBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(x, y, z).getType()));
+	            	   fBlocksFound.add(String.valueOf(location.getBlock().getRelative(x, y, z).getType()));
 	               }
 	            }
 	        }
@@ -55,7 +60,7 @@ public class StructureGrowListener implements Listener
 	            {
 	               for (int z = -(PwnPlantGrowth.wkradius); z <= PwnPlantGrowth.wkradius; z++) 
 	               {
-	            	   wkBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(x, y, z).getType()));
+	            	   wkBlocksFound.add(String.valueOf(location.getBlock().getRelative(x, y, z).getType()));
 	               }
 	            }
 	        }
@@ -70,7 +75,7 @@ public class StructureGrowListener implements Listener
 	            {
 	               for (int z = -(PwnPlantGrowth.uvradius); z <= PwnPlantGrowth.uvradius; z++) 
 	               {
-	            	   uvBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(x, y, z).getType()));
+	            	   uvBlocksFound.add(String.valueOf(location.getBlock().getRelative(x, y, z).getType()));
 	               }
 	            }
 	        }
@@ -84,25 +89,29 @@ public class StructureGrowListener implements Listener
 	}	
 	
 	// Structure Growth eg: trees
-	@EventHandler(ignoreCancelled = false)
-	public void structureGrow(StructureGrowEvent e) 
-	{
-	
+	// Run at HIGHEST: ExoticGarden listens to this event at HIGH
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onStructureGrow(StructureGrowEvent event) {
+		structureGrow(event, event.getLocation(), event.getSpecies().toString(),
+				event.getLocation().getBlock().getType().toString(), event.isFromBonemeal()
+		);
+	}
+
+	public static void structureGrow(Cancellable event, Location location, String curBlock, String speciesName, boolean isBoneMeal) {
+		FileConfiguration config = PwnPlantGrowth.getInstance().getConfig();
+
 		// Enabled in world?
-		World world = e.getLocation().getWorld();
+		World world = location.getWorld();
 		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
 
 		// Get current block type and make a string for comparison later
-		String eventBlock = String.valueOf(e.getSpecies());
+		String eventBlock = speciesName;
 		
 		// Get event coords
-		String coords = String.valueOf(e.getLocation());
-		
-		// Get the material type of the block at the event coords
-		String curBlock = String.valueOf(e.getLocation().getBlock().getType());
+		String coords = String.valueOf(location);
 		
 		// Get current biome and make a string for comparison later
-		String curBiome = PwnPlantGrowth.getBiomeName(e);
+		String curBiome = PwnPlantGrowth.getBiomeName(location.getBlock());
 		
 		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logTreeEnabled) && (PwnPlantGrowth.logVerbose)) 
 		{
@@ -111,7 +120,7 @@ public class StructureGrowListener implements Listener
 		}		
 		
 		//TODO: check for bonemeal usage on structure growth and handle it
-		if (e.isFromBonemeal()) {
+		if (isBoneMeal) {
 			// bonemeal triggered this event, what should we do with it?
 			if (!(PwnPlantGrowth.limitBonemeal)) 
 			{
@@ -124,7 +133,7 @@ public class StructureGrowListener implements Listener
 		}
 		
 		// Is anything set for this block in the config, if not, abort
-		if (!(plugin.getConfig().isSet(curBlock))) 
+		if (!(config.isSet(curBlock)))
 		{
 			PwnPlantGrowth.logToFile("No tree configuration set in config for: " + curBlock);
 			return;
@@ -134,10 +143,10 @@ public class StructureGrowListener implements Listener
 		Boolean isDark = false;
 		
 		// Get the current natural light level
-		int lightLevel = e.getLocation().getBlock().getLightFromSky();
+		int lightLevel = location.getBlock().getLightFromSky();
 		
 		// If the light level is lower than configured threshold and the plant is NOT exempt from dark grow, set this transaction to isDark = true
-		if ((PwnPlantGrowth.naturalLight > lightLevel) && (!PwnPlantGrowth.canDarkGrow(e.getSpecies().toString())))
+		if ((PwnPlantGrowth.naturalLight > lightLevel) && (!PwnPlantGrowth.canDarkGrow(speciesName)))
 		{
 			isDark = true;
 		}
@@ -152,11 +161,11 @@ public class StructureGrowListener implements Listener
 			toLog += "Growing: " + curBlock;
 		}
 
-		Calculate cal = getCalcs(specialBlockList(e), curBlock, curBiome, isDark);
+		Calculate cal = getCalcs(specialBlockList(location), curBlock, curBiome, isDark);
 		toLog += cal.doLog;
-		e.setCancelled(cal.isCancelled);
+		event.setCancelled(cal.isCancelled);
 		if (cal.replacement != null) {
-			e.getLocation().getBlock().setType(cal.replacement);
+			location.getBlock().setType(cal.replacement);
 		}
 		
 
@@ -165,7 +174,6 @@ public class StructureGrowListener implements Listener
 		{	
 			PwnPlantGrowth.logToFile(toLog, "StructureGrow");
 		}
-		
 		return;
 	}
 	

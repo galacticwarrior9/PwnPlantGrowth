@@ -3,6 +3,7 @@ package com.pwn9.PwnPlantGrowth;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.pwn9.PwnPlantGrowth.integration.ExoticGardenIntegration;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -96,7 +97,12 @@ public class BlockFertilizeListener implements Listener
 		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
 
 		// Get source block type and make a string for comparison later
-		String sourceBlock = String.valueOf(e.getBlock().getType());
+		String sourceBlock;
+		if (plugin.isExoticGardenEnabled() && ExoticGardenIntegration.isSlimefunBlock(e.getBlock())) {
+			sourceBlock = ExoticGardenIntegration.getSlimefunBlock(e.getBlock());
+		} else {
+			sourceBlock = String.valueOf(e.getBlock().getType());
+		}
 		
 		// Get current biome and make a string for comparison later
 		String curBiome = PwnPlantGrowth.getBiomeName(e);

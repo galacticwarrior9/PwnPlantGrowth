@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
 
+import com.pwn9.PwnPlantGrowth.integration.ExoticGardenIntegration;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -74,6 +75,9 @@ public class PwnPlantGrowth extends JavaPlugin
 	public static String wkFound;
 	public static String uvFound;
 
+	// CCNet - integration
+	public boolean exoticGardenEnabled = false;
+
 	public void onEnable() 
 	{
 		// Create an instance of this, for some reason, I forget why.
@@ -90,6 +94,11 @@ public class PwnPlantGrowth extends JavaPlugin
 		new PlayerListener(this);
 		new BlockSpreadListener(this);
 		new BlockFertilizeListener(this);
+
+		if (getServer().getPluginManager().isPluginEnabled("ExoticGarden")) {
+			exoticGardenEnabled = true;
+			new ExoticGardenIntegration(this);
+		}
 		
 		// Get data folder
 		PwnPlantGrowth.dataFolder = getDataFolder();
@@ -263,4 +272,11 @@ public class PwnPlantGrowth extends JavaPlugin
 		Config.LoadConfig();
 	}
 
+	public boolean isExoticGardenEnabled() {
+		return exoticGardenEnabled;
+	}
+
+	public static PwnPlantGrowth getInstance() {
+		return instance;
+	}
 }
