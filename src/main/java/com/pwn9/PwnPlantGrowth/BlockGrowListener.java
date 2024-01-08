@@ -101,7 +101,7 @@ public class BlockGrowListener implements Listener
 		String downBlock = String.valueOf(e.getBlock().getRelative(BlockFace.DOWN).getType());
 		
 		// Get current biome and make a string for comparison later
-		String curBiome = PwnPlantGrowth.getBiome(e);
+		String curBiome = PwnPlantGrowth.getBiomeName(e.getBlock());
 		
 		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logPlantEnabled) && (PwnPlantGrowth.logVerbose))
 		{

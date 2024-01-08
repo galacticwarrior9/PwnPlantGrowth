@@ -123,7 +123,7 @@ public class PlayerListener implements Listener
 				boolean isDark = false;
 				// need to get biome data
 
-				String curBiome = PwnPlantGrowth.getBiome(e);
+				String curBiome = PwnPlantGrowth.getBiomeName(e);
 
 				// Get the current natural light level
 				int lightLevel = e.getPlayer().getLocation().getBlock().getLightFromSky();

@@ -99,7 +99,7 @@ public class BlockFertilizeListener implements Listener
 		String sourceBlock = String.valueOf(e.getBlock().getType());
 		
 		// Get current biome and make a string for comparison later
-		String curBiome = PwnPlantGrowth.getBiome(e);
+		String curBiome = PwnPlantGrowth.getBiomeName(e);
 		
 		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logPlantEnabled) && (PwnPlantGrowth.logVerbose))
 		{

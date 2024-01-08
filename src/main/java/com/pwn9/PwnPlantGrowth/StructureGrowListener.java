@@ -102,7 +102,7 @@ public class StructureGrowListener implements Listener
 		String curBlock = String.valueOf(e.getLocation().getBlock().getType());
 		
 		// Get current biome and make a string for comparison later
-		String curBiome = PwnPlantGrowth.getBiome(e);
+		String curBiome = PwnPlantGrowth.getBiomeName(e);
 		
 		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logTreeEnabled) && (PwnPlantGrowth.logVerbose)) 
 		{

@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
 
+import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockFertilizeEvent;
-import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.plugin.Plugin;
@@ -239,23 +239,23 @@ public class PwnPlantGrowth extends JavaPlugin
     	  return s;
     }
 
-	public static String getBiome(BlockGrowEvent e) 
+	public static String getBiomeName(Block block)
 	{
-		return String.valueOf(e.getBlock().getBiome());
+		return String.valueOf(block.getBiome());
 	}
 
-	public static String getBiome(StructureGrowEvent e) 
+	public static String getBiomeName(StructureGrowEvent e)
 	{
 		return String.valueOf(e.getLocation().getBlock().getBiome());
 	}
 
-	public static String getBiome(BlockFertilizeEvent e) 
+	public static String getBiomeName(BlockFertilizeEvent e)
 	{
 		return String.valueOf(e.getBlock().getBiome());
 	}
 	
 	// need to get the biome of the clicked block, not the player, in case the block is in a different biome
-	public static String getBiome(PlayerInteractEvent e) {
+	public static String getBiomeName(PlayerInteractEvent e) {
 		return String.valueOf(e.getClickedBlock().getBiome());
 	}
 	
