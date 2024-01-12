@@ -2,6 +2,8 @@ package com.pwn9.PwnPlantGrowth;
 
 import java.util.List;
 
+import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.WordUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Material;
 
 public class Calculate {
@@ -16,7 +18,7 @@ public class Calculate {
 		String frontLog = ", Biome: " + curBiome + ", Dark: " + isDark.toString() + ", ";
 		String darkLog = "Dark Settings: {";
 		String groupLog = "Settings: {";
-		
+
 		// bool to catch if the biome is never declared in any config, therefor a bad biome and should not grow
 		// not true - i'm an idiot, the null biome is ok to have actually and means default growth
 		boolean noBiome = true;
@@ -305,6 +307,9 @@ public class Calculate {
 	{
 		isCancelled = false;
 		String toLog = "";
+		String blockName = WordUtils.capitalizeFully(thisBlock.replace("_", " "));
+		String biomeName = WordUtils.capitalizeFully(curBiome.replace("_", " "));
+
 		// bool to catch if the biome is never declared in any config, therefor a bad biome and should not grow
 		boolean noBiome = true;
 		boolean fert = false;
@@ -313,9 +318,9 @@ public class Calculate {
 		// defaults
 		int curGrowth = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+".Growth");
 		int curDeath = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+".Death");
-		
+
 		if ((PwnPlantGrowth.instance.getConfig().isSet(thisBlock+".BiomeGroup")) || (PwnPlantGrowth.instance.getConfig().getList(thisBlock+".Biome").isEmpty()) || (PwnPlantGrowth.instance.getConfig().getList(thisBlock+".Biome").contains(curBiome))) 
-		{	
+		{
 			// check the area to find if any of the special blocks are found
 			List<String> fBlocksFound = specialBlocks.get(0);
 			//List<String> wkBlocksFound = specialBlocks.get(1);
@@ -448,12 +453,12 @@ public class Calculate {
 
 		if (noBiome) 
 		{
-			toLog += thisBlock + " will not grow in biome: " + curBiome;				
+			toLog += blockName + " will not grow in biome: " + biomeName;
 		}
 		else 
 		{
-			toLog += thisBlock + " grows at " + curGrowth + "%, dies at " + curDeath +"% in biome " + curBiome;
-			if (isDark) 
+			toLog += String.format("%s grows at %d%% and dies at %d%% in biome %s", blockName, curGrowth, curDeath, biomeName);
+			if (isDark)
 			{
 				toLog += " in the dark";
 				if (uv) 

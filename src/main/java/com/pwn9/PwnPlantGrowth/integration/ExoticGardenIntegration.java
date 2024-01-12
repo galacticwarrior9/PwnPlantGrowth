@@ -3,12 +3,12 @@ package com.pwn9.PwnPlantGrowth.integration;
 import com.pwn9.PwnPlantGrowth.PwnPlantGrowth;
 import com.pwn9.PwnPlantGrowth.StructureGrowListener;
 import io.github.thebusybiscuit.exoticgarden.events.ExoticGardenGrowEvent;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,5 +30,11 @@ public class ExoticGardenIntegration implements Listener {
     @Nullable
     public static String getSlimefunBlock(@NotNull Block block) {
         return BlockStorage.checkID(block);
+    }
+
+    @Nullable
+    public static String getSfItemID(@NotNull ItemStack item) {
+        SlimefunItem sfItem = SlimefunItem.getByItem(item);
+        return (sfItem == null) ? null : sfItem.getId();
     }
 }

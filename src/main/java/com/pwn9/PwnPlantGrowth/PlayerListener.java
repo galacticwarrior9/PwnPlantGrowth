@@ -3,10 +3,8 @@ package com.pwn9.PwnPlantGrowth;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.World;
+import com.pwn9.PwnPlantGrowth.integration.ExoticGardenIntegration;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -112,13 +110,21 @@ public class PlayerListener implements Listener
 		{
 			
 			Player p = e.getPlayer();
-			
+
 			Block block = e.getClickedBlock();
-			
+
 			if (block.getType() == Material.FARMLAND || block.getType() == Material.DIRT || block.getType() == Material.GRASS_BLOCK || block.getType() == Material.JUNGLE_LOG || block.getType() == Material.SAND || block.getType() == Material.SOUL_SAND) 
 			{
-				
 				Material m = e.getMaterial();
+				String blockName;
+				String sfItemId = null;
+				if (PwnPlantGrowth.getInstance().isExoticGardenEnabled()) {
+					sfItemId = ExoticGardenIntegration.getSfItemID(e.getItem());
+					blockName = (sfItemId == null) ? e.getMaterial().name() : sfItemId;
+				} else {
+					blockName = m.name();
+				}
+
 				String a = "";
 				boolean isDark = false;
 				// need to get biome data
@@ -128,21 +134,21 @@ public class PlayerListener implements Listener
 				// Get the current natural light level
 				int lightLevel = e.getPlayer().getLocation().getBlock().getLightFromSky();
 
-				if(PwnPlantGrowth.plantTypes.contains(m.toString())) {
+				if(PwnPlantGrowth.plantTypes.contains(blockName) || sfItemId != null) {
 					
 					
 					// If the light level is lower than configured threshold and the plant is NOT exempt from dark grow, set this transaction to isDark = true
-					if ((PwnPlantGrowth.naturalLight > lightLevel) && (!PwnPlantGrowth.canDarkGrow(m.toString())))
+					if ((PwnPlantGrowth.naturalLight > lightLevel) && (!PwnPlantGrowth.canDarkGrow(blockName)))
 					{
 						isDark = true;
 					}					
 					
 					//do a calculate here
-					Calculate cal = getCalcs(true, specialBlockList(e), m.toString(), curBiome, isDark);
+					Calculate cal = getCalcs(true, specialBlockList(e), blockName, curBiome, isDark);
 					a += cal.doLog;
 
-					String msg = ChatColor.translateAlternateColorCodes('&', PwnPlantGrowth.msgFormat + a);
-					p.sendMessage(msg);
+					String msg = PwnPlantGrowth.msgFormat + a;
+					p.sendRichMessage(msg);
 					
 					// annoying unable to test in create without breaking block so cancel even in creative only
 					if (p.getGameMode() == GameMode.CREATIVE) {
@@ -150,7 +156,7 @@ public class PlayerListener implements Listener
 					}
 					
 				}
-				else if(PwnPlantGrowth.seedTypes.contains(m.toString())) {
+				else if (PwnPlantGrowth.seedTypes.contains(blockName)) {
 					
 					if (m == Material.BEETROOT_SEEDS || m == Material.BEETROOT) {
 						Calculate cal = getCalcs(true, specialBlockList(e), "BEETROOTS", curBiome, isDark);
@@ -189,8 +195,8 @@ public class PlayerListener implements Listener
 						a += cal.doLog;						
 					}
 					
-					String msg = ChatColor.translateAlternateColorCodes('&', PwnPlantGrowth.msgFormat + a);
-					p.sendMessage(msg);
+					String msg = PwnPlantGrowth.msgFormat + a;
+					p.sendRichMessage(msg);
 					
 					// annoying unable to test in creative without breaking block so cancel event in creative only
 					if (p.getGameMode() == GameMode.CREATIVE) {
