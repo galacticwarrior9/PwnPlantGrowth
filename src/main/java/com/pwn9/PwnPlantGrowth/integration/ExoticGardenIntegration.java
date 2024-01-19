@@ -2,9 +2,11 @@ package com.pwn9.PwnPlantGrowth.integration;
 
 import com.pwn9.PwnPlantGrowth.PwnPlantGrowth;
 import com.pwn9.PwnPlantGrowth.StructureGrowListener;
-import io.github.thebusybiscuit.exoticgarden.events.ExoticGardenGrowEvent;
+import io.github.thebusybiscuit.exoticgarden.events.ExoticGardenPlantGrowEvent;
+import io.github.thebusybiscuit.exoticgarden.events.ExoticGardenStructureGrowEvent;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,9 +20,14 @@ public class ExoticGardenIntegration implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onExoticGardenGrow(ExoticGardenGrowEvent event) {
+    public void onExoticGardenGrow(ExoticGardenStructureGrowEvent event) {
         StructureGrowListener.structureGrow(event, event.getLocation(), event.getItemId(),
                 event.getItemId(), event.getStructureGrowEvent().isFromBonemeal());
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onExoticGardenPlantGrow(ExoticGardenPlantGrowEvent event) {
+        StructureGrowListener.structureGrow(event, event.getLocation(), event.getItemId(), event.getItemId(), false);
     }
 
     public static boolean isSlimefunBlock(@NotNull Block block) {
@@ -34,6 +41,8 @@ public class ExoticGardenIntegration implements Listener {
 
     @Nullable
     public static String getSfItemID(@NotNull ItemStack item) {
+        if (!Tag.SAPLINGS.isTagged(item.getType()))
+            return null;
         SlimefunItem sfItem = SlimefunItem.getByItem(item);
         return (sfItem == null) ? null : sfItem.getId();
     }
