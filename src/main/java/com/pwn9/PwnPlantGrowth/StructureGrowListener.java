@@ -24,7 +24,7 @@ public class StructureGrowListener implements Listener
 	    this.plugin = plugin;
 	}
 	
-	static Calculate getCalcs(List<List<String>> specialBlocks, String thisBlock, String curBiome, Boolean isDark)
+	public static Calculate getCalcs(List<List<String>> specialBlocks, String thisBlock, String curBiome, Boolean isDark)
 	{
 		return new Calculate(specialBlocks, thisBlock, curBiome, isDark);
 	}
@@ -46,7 +46,9 @@ public class StructureGrowListener implements Listener
 	            {
 	               for (int z = -(PwnPlantGrowth.fradius); z <= PwnPlantGrowth.fradius; z++) 
 	               {
-	            	   fBlocksFound.add(String.valueOf(location.getBlock().getRelative(x, y, z).getType()));
+					   if (location.isChunkLoaded()) {
+						   fBlocksFound.add(String.valueOf(location.getBlock().getRelative(x, y, z).getType()));
+					   }
 	               }
 	            }
 	        }
@@ -60,7 +62,9 @@ public class StructureGrowListener implements Listener
 	            {
 	               for (int z = -(PwnPlantGrowth.wkradius); z <= PwnPlantGrowth.wkradius; z++) 
 	               {
-	            	   wkBlocksFound.add(String.valueOf(location.getBlock().getRelative(x, y, z).getType()));
+					   if (location.isChunkLoaded()) {
+						   wkBlocksFound.add(String.valueOf(location.getBlock().getRelative(x, y, z).getType()));
+					   }
 	               }
 	            }
 	        }
@@ -75,7 +79,9 @@ public class StructureGrowListener implements Listener
 	            {
 	               for (int z = -(PwnPlantGrowth.uvradius); z <= PwnPlantGrowth.uvradius; z++) 
 	               {
-	            	   uvBlocksFound.add(String.valueOf(location.getBlock().getRelative(x, y, z).getType()));
+					   if (location.isChunkLoaded()) {
+						   uvBlocksFound.add(String.valueOf(location.getBlock().getRelative(x, y, z).getType()));
+					   }
 	               }
 	            }
 	        }
@@ -165,7 +171,8 @@ public class StructureGrowListener implements Listener
 		toLog += cal.doLog;
 		event.setCancelled(cal.isCancelled);
 		if (cal.replacement != null) {
-			location.getBlock().setType(cal.replacement);
+			// CCNet - applying physics can break the dead bushes upon placement
+			location.getBlock().setType(cal.replacement, false);
 		}
 		
 
