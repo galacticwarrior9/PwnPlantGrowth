@@ -27,7 +27,7 @@ public class PlayerListener implements Listener
 	}
 	
 	// retrieve list of special blocks
-	public List<List<String>> specialBlockList(PlayerInteractEvent e)
+	public List<List<String>> specialBlockList(Location origin)
 	{
 		List<String> fBlocksFound = new ArrayList<String>();
 		List<String> wkBlocksFound = new ArrayList<String>();
@@ -44,7 +44,7 @@ public class PlayerListener implements Listener
 	            {
 	               for (int fz = -(PwnPlantGrowth.fradius); fz <= PwnPlantGrowth.fradius; fz++) 
 	               {
-	            	   fBlocksFound.add(String.valueOf(e.getPlayer().getLocation().getBlock().getRelative(fx, fy, fz).getType()));
+	            	   fBlocksFound.add(String.valueOf(origin.getBlock().getRelative(fx, fy, fz).getType()));
 	               }
 	            }
 	        }
@@ -59,7 +59,7 @@ public class PlayerListener implements Listener
 	            {
 	               for (int wz = -(PwnPlantGrowth.wkradius); wz <= PwnPlantGrowth.wkradius; wz++) 
 	               {
-	            	   wkBlocksFound.add(String.valueOf(e.getPlayer().getLocation().getBlock().getRelative(wx, wy, wz).getType()));
+	            	   wkBlocksFound.add(String.valueOf(origin.getBlock().getRelative(wx, wy, wz).getType()));
 	               }
 	            }
 	        }
@@ -74,7 +74,7 @@ public class PlayerListener implements Listener
 	            {
 	               for (int uz = -(PwnPlantGrowth.uvradius); uz <= PwnPlantGrowth.uvradius; uz++) 
 	               {
-	            	   uvBlocksFound.add(String.valueOf(e.getPlayer().getLocation().getBlock().getRelative(ux, uy, uz).getType()));
+	            	   uvBlocksFound.add(String.valueOf(origin.getBlock().getRelative(ux, uy, uz).getType()));
 	               }
 	            }
 	        }
@@ -132,7 +132,7 @@ public class PlayerListener implements Listener
 				String curBiome = PwnPlantGrowth.getBiomeName(e);
 
 				// Get the current natural light level
-				int lightLevel = e.getPlayer().getLocation().getBlock().getLightFromSky();
+				int lightLevel = block.getLightFromSky();
 
 				if(PwnPlantGrowth.plantTypes.contains(blockName) || sfItemId != null) {
 					
@@ -144,7 +144,7 @@ public class PlayerListener implements Listener
 					}					
 					
 					//do a calculate here
-					Calculate cal = getCalcs(true, specialBlockList(e), blockName, curBiome, isDark);
+					Calculate cal = getCalcs(true, specialBlockList(block.getLocation()), blockName, curBiome, isDark);
 					a += cal.doLog;
 
 					String msg = PwnPlantGrowth.msgFormat + a;
@@ -157,41 +157,41 @@ public class PlayerListener implements Listener
 					
 				}
 				else if (PwnPlantGrowth.seedTypes.contains(blockName)) {
-					
+					Location blockLoc = block.getLocation();
 					if (m == Material.BEETROOT_SEEDS || m == Material.BEETROOT) {
-						Calculate cal = getCalcs(true, specialBlockList(e), "BEETROOTS", curBiome, isDark);
+						Calculate cal = getCalcs(true, specialBlockList(blockLoc), "BEETROOTS", curBiome, isDark);
 						a += cal.doLog;
 					}
 					else if (m == Material.CARROT) {
-						Calculate cal = getCalcs(true, specialBlockList(e), "CARROTS", curBiome, isDark);
+						Calculate cal = getCalcs(true, specialBlockList(blockLoc), "CARROTS", curBiome, isDark);
 						a += cal.doLog;						
 					}						
 					else if (m == Material.COCOA_BEANS) {
-						Calculate cal = getCalcs(true, specialBlockList(e), "COCOA", curBiome, isDark);
+						Calculate cal = getCalcs(true, specialBlockList(blockLoc), "COCOA", curBiome, isDark);
 						a += cal.doLog;						
 					}	
 					else if (m == Material.MELON_SEEDS) {
-						Calculate cal = getCalcs(true, specialBlockList(e), "MELON_STEM", curBiome, isDark);
+						Calculate cal = getCalcs(true, specialBlockList(blockLoc), "MELON_STEM", curBiome, isDark);
 						a += cal.doLog;		
-						Calculate cal2 = getCalcs(true, specialBlockList(e), "MELON", curBiome, isDark);
+						Calculate cal2 = getCalcs(true, specialBlockList(blockLoc), "MELON", curBiome, isDark);
 						a += " " + cal2.doLog;							
 					}
 					else if (m == Material.POTATO) {
-						Calculate cal = getCalcs(true, specialBlockList(e), "POTATOES", curBiome, isDark);
+						Calculate cal = getCalcs(true, specialBlockList(blockLoc), "POTATOES", curBiome, isDark);
 						a += cal.doLog;						
 					}					
 					else if (m == Material.PUMPKIN_SEEDS) {
-						Calculate cal = getCalcs(true, specialBlockList(e), "PUMPKIN_STEM", curBiome, isDark);
+						Calculate cal = getCalcs(true, specialBlockList(blockLoc), "PUMPKIN_STEM", curBiome, isDark);
 						a += cal.doLog;		
-						Calculate cal2 = getCalcs(true, specialBlockList(e), "PUMPKIN", curBiome, isDark);
+						Calculate cal2 = getCalcs(true, specialBlockList(blockLoc), "PUMPKIN", curBiome, isDark);
 						a += " " + cal2.doLog;						
 					}
 					else if (m == Material.SWEET_BERRIES) {		
-						Calculate cal = getCalcs(true, specialBlockList(e), "SWEET_BERRY_BUSH", curBiome, isDark);
+						Calculate cal = getCalcs(true, specialBlockList(blockLoc), "SWEET_BERRY_BUSH", curBiome, isDark);
 						a += cal.doLog;						
 					}
 					else if (m == Material.WHEAT_SEEDS) {	
-						Calculate cal = getCalcs(true, specialBlockList(e), "WHEAT", curBiome, isDark);
+						Calculate cal = getCalcs(true, specialBlockList(blockLoc), "WHEAT", curBiome, isDark);
 						a += cal.doLog;						
 					}
 					
