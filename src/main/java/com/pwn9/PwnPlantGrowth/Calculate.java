@@ -8,9 +8,11 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class Calculate {
-	Boolean isCancelled;
-	Material replacement;
-	String doLog;
+	public Boolean isCancelled;
+	public Material replacement;
+	public String doLog;
+	public int curDeath;
+	public int curGrowth;
 
 	Calculate(List<List<String>> specialBlocks, String thisBlock, String curBiome, Boolean isDark)
 	{
@@ -27,9 +29,9 @@ public class Calculate {
 		FileConfiguration config = PwnPlantGrowth.getInstance().getConfig();
 		List<String> blockBiomeSettings = config.getStringList(thisBlock + ".Biome");
 
-		int curGrowth = config.getInt(thisBlock+".Growth");
+		curGrowth = config.getInt(thisBlock+".Growth");
 		frontLog += "Default Growth: " + curGrowth + ", ";
-		int curDeath = config.getInt(thisBlock+".Death");
+		curDeath = config.getInt(thisBlock+".Death");
 		frontLog += "Default Death: " + curDeath + ", ";
 
 
@@ -321,8 +323,8 @@ public class Calculate {
 		FileConfiguration config = PwnPlantGrowth.getInstance().getConfig();
 		List<String> blockBiomeSettings = config.getStringList(thisBlock + ".Biome");
 
-		int curGrowth = config.getInt(thisBlock+".Growth");
-		int curDeath = config.getInt(thisBlock+".Death");
+		curGrowth = config.getInt(thisBlock+".Growth");
+		curDeath = config.getInt(thisBlock+".Death");
 
 		if ((config.isSet(thisBlock+".BiomeGroup")) || (blockBiomeSettings.isEmpty()) || (blockBiomeSettings.contains(curBiome)))
 		{
