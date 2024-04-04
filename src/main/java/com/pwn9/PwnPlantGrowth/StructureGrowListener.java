@@ -170,7 +170,8 @@ public class StructureGrowListener implements Listener
 		Calculate cal = getCalcs(specialBlockList(location), curBlock, curBiome, isDark);
 		toLog += cal.doLog;
 		event.setCancelled(cal.isCancelled);
-		if (cal.replacement != null) {
+		// CCNet - Block#isPassable is a quick hack to ensure we don't replace the block if it has changed (e.g. due to Harvester moving onto the block)
+		if (cal.replacement != null && location.getBlock().isPassable()) {
 			// CCNet - applying physics can break the dead bushes upon placement
 			location.getBlock().setType(cal.replacement, false);
 		}
