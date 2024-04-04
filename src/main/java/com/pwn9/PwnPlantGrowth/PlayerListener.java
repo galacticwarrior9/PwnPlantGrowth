@@ -6,6 +6,7 @@ import java.util.List;
 import com.pwn9.PwnPlantGrowth.integration.ExoticGardenIntegration;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -132,7 +133,7 @@ public class PlayerListener implements Listener
 				String curBiome = PwnPlantGrowth.getBiomeName(e);
 
 				// Get the current natural light level
-				int lightLevel = block.getLightFromSky();
+				int lightLevel = block.getRelative(BlockFace.UP).getLightFromSky();
 
 				if(PwnPlantGrowth.plantTypes.contains(blockName) || sfItemId != null) {
 					
