@@ -46,8 +46,9 @@ public class StructureGrowListener implements Listener
 	            {
 	               for (int z = -(PwnPlantGrowth.fradius); z <= PwnPlantGrowth.fradius; z++) 
 	               {
-					   if (location.isChunkLoaded()) {
-						   fBlocksFound.add(String.valueOf(location.getBlock().getRelative(x, y, z).getType()));
+					   Location relativeLoc = location.clone().add(x, y, z);
+					   if (relativeLoc.isChunkLoaded()) {
+						   fBlocksFound.add(String.valueOf(relativeLoc.getBlock().getType()));
 					   }
 	               }
 	            }
