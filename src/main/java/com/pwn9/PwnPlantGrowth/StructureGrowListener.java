@@ -63,8 +63,9 @@ public class StructureGrowListener implements Listener
 	            {
 	               for (int z = -(PwnPlantGrowth.wkradius); z <= PwnPlantGrowth.wkradius; z++) 
 	               {
+					   Location relativeLoc = location.clone().add(x, y, z);
 					   if (location.isChunkLoaded()) {
-						   wkBlocksFound.add(String.valueOf(location.getBlock().getRelative(x, y, z).getType()));
+						   wkBlocksFound.add(String.valueOf(relativeLoc.getBlock().getType()));
 					   }
 	               }
 	            }
@@ -80,8 +81,9 @@ public class StructureGrowListener implements Listener
 	            {
 	               for (int z = -(PwnPlantGrowth.uvradius); z <= PwnPlantGrowth.uvradius; z++) 
 	               {
+					   Location relativeLoc = location.clone().add(x, y, z);
 					   if (location.isChunkLoaded()) {
-						   uvBlocksFound.add(String.valueOf(location.getBlock().getRelative(x, y, z).getType()));
+						   uvBlocksFound.add(String.valueOf(relativeLoc.getBlock().getType()));
 					   }
 	               }
 	            }
