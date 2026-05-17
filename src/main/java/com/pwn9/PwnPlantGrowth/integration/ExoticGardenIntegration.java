@@ -7,8 +7,11 @@ import io.github.thebusybiscuit.exoticgarden.events.ExoticGardenCalculateGrowthE
 import io.github.thebusybiscuit.exoticgarden.events.ExoticGardenPlantGrowEvent;
 import io.github.thebusybiscuit.exoticgarden.events.ExoticGardenStructureGrowEvent;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.Material;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -39,7 +42,9 @@ public class ExoticGardenIntegration implements Listener {
     public void onExoticGardenCalculateGrowth(ExoticGardenCalculateGrowthEvent event) {
         Block block = event.getLocation().getBlock();
         boolean isDark = PwnPlantGrowth.naturalLight > block.getLightFromSky() && !PwnPlantGrowth.canDarkGrow(event.getPlantId());
-        Calculate cal = getCalcs(specialBlockList(event.getLocation()), event.getPlantId(), block.getBiome().name(), isDark);
+        Biome biome = block.getBiome();
+        String biomeName = RegistryAccess.registryAccess().getRegistry(RegistryKey.BIOME).getKey(biome).getKey().toUpperCase();
+        Calculate cal = getCalcs(specialBlockList(event.getLocation()), event.getPlantId(), biomeName, isDark);
         event.setGrowthChance(cal.curGrowth);
         event.setDeathChance(cal.curDeath);
     }

@@ -13,6 +13,9 @@ import java.util.Random;
 import java.util.ArrayList;
 
 import com.pwn9.PwnPlantGrowth.integration.ExoticGardenIntegration;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -255,17 +258,20 @@ public class PwnPlantGrowth extends JavaPlugin
 
 	public static String getBiomeName(StructureGrowEvent e)
 	{
-		return String.valueOf(e.getLocation().getBlock().getBiome());
+		Biome biome = e.getLocation().getBlock().getBiome();
+		return RegistryAccess.registryAccess().getRegistry(RegistryKey.BIOME).getKey(biome).getKey().toUpperCase();
 	}
 
 	public static String getBiomeName(BlockFertilizeEvent e)
 	{
-		return String.valueOf(e.getBlock().getBiome());
+		Biome biome = e.getBlock().getBiome();
+        return RegistryAccess.registryAccess().getRegistry(RegistryKey.BIOME).getKey(biome).getKey().toUpperCase();
 	}
 	
 	// need to get the biome of the clicked block, not the player, in case the block is in a different biome
 	public static String getBiomeName(PlayerInteractEvent e) {
-		return String.valueOf(e.getClickedBlock().getBiome());
+		Biome biome = e.getClickedBlock().getBiome();
+		return RegistryAccess.registryAccess().getRegistry(RegistryKey.BIOME).getKey(biome).getKey().toUpperCase();
 	}
 	
 	public void loadConfig() {
