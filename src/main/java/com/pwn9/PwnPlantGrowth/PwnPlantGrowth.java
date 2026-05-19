@@ -253,7 +253,8 @@ public class PwnPlantGrowth extends JavaPlugin
 
 	public static String getBiomeName(Block block)
 	{
-		return String.valueOf(block.getBiome());
+		Biome biome = block.getBiome();
+		return RegistryAccess.registryAccess().getRegistry(RegistryKey.BIOME).getKey(biome).getKey().toUpperCase();
 	}
 
 	public static String getBiomeName(StructureGrowEvent e)
